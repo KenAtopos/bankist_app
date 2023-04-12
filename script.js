@@ -54,3 +54,64 @@ btnScrollTo.addEventListener("click", (event) => {
 
   section1.scrollIntoView({ behavior: "smooth" });
 });
+
+// document.querySelectorAll(".nav__link").forEach((element) => {
+//   element.addEventListener("click", function (event) {
+//     event.preventDefault();
+//     const id = this.getAttribute("href");
+//     document.querySelector(id).scrollIntoView({ behavior: "smooth" });
+//   });
+// });
+
+// event delegation
+document
+  .querySelector(".nav__links")
+  .addEventListener("click", function (event) {
+    event.preventDefault();
+    // matching strategy
+    if (event.target.classList.contains("nav__link")) {
+      const id = event.target.getAttribute("href");
+      document.querySelector(id).scrollIntoView({ behavior: "smooth" });
+    }
+  });
+
+// tabbed component
+const tabs = document.querySelectorAll(".operations__tab");
+const tabsContainer = document.querySelector(".operations__tab-container");
+const tabsContent = document.querySelectorAll(".operations__content");
+
+tabsContainer.addEventListener("click", (event) => {
+  const clicked = event.target.closest(".operations__tab");
+  // guard clause
+  if (!clicked) return;
+  // active tab
+  tabs.forEach((tab) => {
+    tab.classList.remove("operations__tab--active");
+  });
+  clicked.classList.add("operations__tab--active");
+  // active content area
+  tabsContent.forEach((content) => {
+    content.classList.remove("operations__content--active");
+  });
+  document
+    .querySelector(`.operations__content--${clicked.dataset.tab}`)
+    .classList.add("operations__content--active");
+});
+
+///////////////////////
+// const h1 = document.querySelector("h1");
+// // const h4 = document.querySelector("h4");
+// console.log(h1.querySelectorAll(".highlight"));
+// console.log(h1.childNodes);
+// console.log(h1.children);
+
+// console.log(h1.nextSibling);
+// console.log(h1.previousSibling);
+
+// console.log(h1.parentElement.children);
+// [...h1.parentElement.children].forEach(function (element) {
+//   console.log(element);
+//   if (element === h1) {
+//     element.style.transform = "scale(0.5)";
+//   }
+// });
