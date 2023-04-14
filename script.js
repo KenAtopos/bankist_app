@@ -117,6 +117,32 @@ const handleHover = function (event) {
 nav.addEventListener("mouseover", handleHover.bind(0.5));
 nav.addEventListener("mouseout", handleHover.bind(1));
 
+// sticky navigation
+// const initialCoords = section1.getBoundingClientRect();
+
+// window.addEventListener("scroll", function () {
+//   if (this.window.scrollY >= initialCoords.top) {
+//     nav.classList.add("sticky");
+//   } else {
+//     nav.classList.remove("sticky");
+//   }
+// });
+
+// sticky navigation: intersection observer api
+const obsCallback = function (entires, observer) {
+  entires.forEach((entry) => {
+    console.log(entry);
+  });
+};
+
+const obsOptions = {
+  root: null, // null means the entire viewpoint, root is the object which the target element tries to intersect
+  threshold: 0.1, // 10%
+};
+
+const observer = new IntersectionObserver(obsCallback, obsOptions);
+observer.observe(section1);
+
 ///////////////////////
 // const h1 = document.querySelector("h1");
 // // const h4 = document.querySelector("h4");
