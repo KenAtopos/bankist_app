@@ -15,6 +15,7 @@ const tabsContent = document.querySelectorAll(".operations__content");
 const nav = document.querySelector(".nav");
 const header = document.querySelector(".header");
 const navHeight = nav.getBoundingClientRect().height;
+const allSections = document.querySelectorAll(".section");
 
 const openModal = function (event) {
   event.preventDefault();
@@ -147,8 +148,6 @@ nav.addEventListener("mouseout", handleHover.bind(1));
 
 const stickyNav = function (entries) {
   const [entry] = entries;
-  console.log(entries);
-  console.log(entry);
   if (!entry.isIntersecting) {
     nav.classList.add("sticky");
   } else {
@@ -163,20 +162,42 @@ const headerObserver = new IntersectionObserver(stickyNav, {
 });
 headerObserver.observe(header);
 
-///////////////////////
-// const h1 = document.querySelector("h1");
-// // const h4 = document.querySelector("h4");
-// console.log(h1.querySelectorAll(".highlight"));
-// console.log(h1.childNodes);
-// console.log(h1.children);
+// reveal sections
+const revealSection = function (entries, observer) {
+  const [entry] = entries;
+  // console.log(entry);
+  if (!entry.isIntersecting) return;
+  entry.target.classList.remove("section--hidden");
+  observer.unobserve(entry.target);
+};
+const sectionObserver = new IntersectionObserver(revealSection, {
+  root: null,
+  threshold: 0.15,
+});
 
-// console.log(h1.nextSibling);
-// console.log(h1.previousSibling);
+allSections.forEach(function (section) {
+  sectionObserver.observe(section);
+  section.classList.add("section--hidden");
+});
 
-// console.log(h1.parentElement.children);
-// [...h1.parentElement.children].forEach(function (element) {
-//   console.log(element);
-//   if (element === h1) {
-//     element.style.transform = "scale(0.5)";
-//   }
-// });
+// lazy loading imgs
+const imgTarget = document.querySelectorAll("img[data-src]");
+const loadImg = function (entries, observer) {
+  const [entry] = entries;
+  console.log(entry);
+  if (!entry.isIntersecting) return;
+  // replace src with data-src
+  entry.target.src = entry.target.dataset.src;
+  entry.target.addEventListener("load", function () {
+    entry.target.classList.remove("lazy-img");
+  });
+
+  observer.unobserve(entry.target);
+};
+
+const imgObserver = new IntersectionObserver(loadImg, {
+  root: null,
+  threshold: 0,
+  rootMargin: "200px",
+});
+imgTarget.forEach((img) => imgObserver.observe(img));
