@@ -13,6 +13,8 @@ const tabs = document.querySelectorAll(".operations__tab");
 const tabsContainer = document.querySelector(".operations__tab-container");
 const tabsContent = document.querySelectorAll(".operations__content");
 const nav = document.querySelector(".nav");
+const header = document.querySelector(".header");
+const navHeight = nav.getBoundingClientRect().height;
 
 const openModal = function (event) {
   event.preventDefault();
@@ -129,19 +131,37 @@ nav.addEventListener("mouseout", handleHover.bind(1));
 // });
 
 // sticky navigation: intersection observer api
-const obsCallback = function (entires, observer) {
-  entires.forEach((entry) => {
-    console.log(entry);
-  });
+// const obsCallback = function (entires, observer) {
+//   entires.forEach((entry) => {
+//     console.log(entry);
+//   });
+// };
+
+// const obsOptions = {
+//   root: null, // null means the entire viewpoint, root is the object which the target element tries to intersect
+//   threshold: [0, 0.2], // 10%
+// };
+
+// const observer = new IntersectionObserver(obsCallback, obsOptions);
+// observer.observe(section1);
+
+const stickyNav = function (entries) {
+  const [entry] = entries;
+  console.log(entries);
+  console.log(entry);
+  if (!entry.isIntersecting) {
+    nav.classList.add("sticky");
+  } else {
+    nav.classList.remove("sticky");
+  }
 };
 
-const obsOptions = {
-  root: null, // null means the entire viewpoint, root is the object which the target element tries to intersect
-  threshold: 0.1, // 10%
-};
-
-const observer = new IntersectionObserver(obsCallback, obsOptions);
-observer.observe(section1);
+const headerObserver = new IntersectionObserver(stickyNav, {
+  root: null,
+  threshold: 0,
+  rootMargin: `-${navHeight}px`,
+});
+headerObserver.observe(header);
 
 ///////////////////////
 // const h1 = document.querySelector("h1");
